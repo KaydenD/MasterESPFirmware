@@ -1,0 +1,59 @@
+<h1>Team 9 People Counter</h1>
+<h2 id="peopleCount">Count: waiting</h2>
+<h3 id="batteryVoltage">0 mV</h3>
+<div id="buttonDiv">
+  <button onclick="buttonClick();">Reset Counter</button>
+</div>
+<div id="console"></div>
+<style>
+  h1, h2, h3 {
+    text-align: center;
+  }
+  #console{
+    white-space: pre-wrap;
+    max-width: 720px;
+    border-width: 5px;
+    border: solid;
+    margin: auto;
+    background: lightgray;
+    border-width: thin;
+    padding: 4px;
+    max-height: 480px;
+    overflow-y: auto;
+  }
+  #buttonDiv {
+    text-align: center;
+    padding: 4px;
+    margin: 16px;
+  }
+</style>
+<script>
+  const ws = new WebSocket('ws://192.168.4.1/ws');
+  ws.onopen = () => {
+    console.log('ws opened on browser');
+    let p = document.createElement("p");
+    p.innerText = 'ws opened on browser';
+    document.getElementById("console").innerText += consolePrefix() + "ws opened on browser\n";
+    ws.send("requestcounter");
+  };
+  
+  ws.onmessage = (message) => {
+    console.log(message.data);
+    const json = JSON.parse(message.data);
+    if('count' in json){
+      document.getElementById("peopleCount").innerText = `Count:  ${json.count}`;
+    } else if ('batteryVoltage' in json){
+      document.getElementById("batteryVoltage").innerText = `${json.batteryVoltage} mV`;
+      document.getElementById("console").innerText += consolePrefix() + message.data + '\n';
+    } else {
+      document.getElementById("console").innerText += consolePrefix() + "Invaild Message Received\n";
+      document.getElementById("console").innerText += consolePrefix() + message.data + '\n';
+    }
+  };
+  let consolePrefix = () => {
+    return new Date().toLocaleTimeString("en-US", { hour12: false }) + "> ";
+  }
+  let buttonClick = () => {
+    ws.send("counterreset");
+  }
+</script>
