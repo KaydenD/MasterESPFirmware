@@ -268,7 +268,7 @@ esp_err_t startPeopleCountingAlgorithm(int* countp){
 
     gpio_set_level(TOP_LED_PIN, gpio_get_level(TOP_PD_PIN));
     gpio_set_level(BOTTOM_LED_PIN, gpio_get_level(BOTTOM_PD_PIN));
-    gpio_set_level(BUZZER_PIN, 0);
+    gpio_set_level(BUZZER_PIN, 1);
 
     state_machine_evt_queue = xQueueCreate(10, sizeof(StateMachineEvent));
     // gpio_install_isr_service(0); done in main
@@ -277,6 +277,10 @@ esp_err_t startPeopleCountingAlgorithm(int* countp){
     gpio_isr_handler_add(BOTTOM_PD_PIN, gpio_isr_handler, (void*)&bottomPair);
 
     xTaskCreate(peopleCountingAlgoritmMain, "PeopleCountingAlg", 4096, NULL, 5, NULL);
+
+    vTaskDelay(pdMS_TO_TICKS(500));   
+
+    gpio_set_level(BUZZER_PIN, 0);
 
     return ESP_OK;
 
