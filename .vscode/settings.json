@@ -1,7 +1,7 @@
 {
   "C_Cpp.intelliSenseEngine": "Tag Parser",
   "idf.flashType": "UART",
-  "idf.portWin": "COM4",
+  "idf.portWin": "COM5",
   "files.associations": {
     "esp_http_server.h": "c",
     "sys.h": "c",

@@ -199,7 +199,8 @@ static void peopleCountingAlgoritmMain(){
                     if(event.type == MIN_BEAM_BREAK_TIME_INTERVAL){
                         fsm_state = STATE_SECOND_TRIGGER_VALID;
                     } else {
-                        fsm_state = STATE_IDLE;
+                        //fsm_state = STATE_IDLE;
+                        fsm_state = STATE_SECOND_TRIGGER_VALID;
                         esp_timer_stop(minBreakTimeTimer);
                         esp_timer_stop(blockedTimeTimer);
                         ESP_LOGE(TAG, "Second Trigger Debounce Fail");
