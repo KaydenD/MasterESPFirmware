@@ -199,9 +199,14 @@ static void peopleCountingAlgoritmMain(){
                     if(event.type == MIN_BEAM_BREAK_TIME_INTERVAL){
                         fsm_state = STATE_SECOND_TRIGGER_VALID;
                     } else {
-                        fsm_state = STATE_IDLE;
+                        if(gpio_get_level(firstTriggerPin)){
+                            fsm_state = STATE_WAIT_UNTIL_SECOND_TRIGGER;
+                            esp_timer_restart(blockedTimeTimer);
+                        } else {
+                            fsm_state = STATE_IDLE;
+                            esp_timer_stop(blockedTimeTimer);
+                        }
                         esp_timer_stop(minBreakTimeTimer);
-                        esp_timer_stop(blockedTimeTimer);
                         ESP_LOGE(TAG, "Second Trigger Debounce Fail");
                     }
                     break;
@@ -224,6 +229,9 @@ static void peopleCountingAlgoritmMain(){
                         httpd_ws_send_frame_to_all_clients(&frame);
                         writeCountToNVS();
                         ESP_LOGI(TAG, "FSM Cycle Complete. New count: %i", *count);
+                    } else if (event.type == PHOTODIODE && event.pin == secondTriggerPin && event.state == 0 && gpio_get_level(firstTriggerPin) == 1){
+                        fsm_state = STATE_WAIT_UNTIL_SECOND_TRIGGER;
+                        esp_timer_restart(blockedTimeTimer);
                     } else if(event.type == BLOCKED_TIME_INTERVAL){
                         fsm_state = STATE_BLOCKED;
                         gpio_set_level(BUZZER_PIN, 1);
