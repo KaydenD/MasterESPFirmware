@@ -99,11 +99,11 @@ void batteryEventHandler(){
             for(uint8_t i = 0x00; i <= 12; i++){
                 //ESP_LOGI(TAG, "%X", i);
                 ESP_ERROR_CHECK(i2c_master_write_read_device(I2C_MASTER_NUM, 0x6A, &i, 1, &value, 1, 1000 / portTICK_PERIOD_MS));
-                ESP_LOGI(TAG, "REG[0x%hhX] = 0b"BYTE_TO_BINARY_PATTERN, i, BYTE_TO_BINARY(value));
+                //ESP_LOGI(TAG, "REG[0x%hhX] = 0b"BYTE_TO_BINARY_PATTERN, i, BYTE_TO_BINARY(value));
                 lenWritten += sprintf(payload + lenWritten, ",\n\"REG0x%02hhX\": \"0b"BYTE_TO_BINARY_PATTERN"\"", i, BYTE_TO_BINARY(value)); 
             }
             lenWritten += sprintf(payload + lenWritten, "\n}");
-            ESP_LOGI(TAG, "%s", payload);
+            //ESP_LOGI(TAG, "%s", payload);
             httpd_ws_frame_t frame = {
                 .type = HTTPD_WS_TYPE_TEXT,
                 .len = lenWritten,
