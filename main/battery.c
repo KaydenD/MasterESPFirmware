@@ -198,7 +198,7 @@ esp_err_t batteryManagmentInit(){
     ESP_ERROR_CHECK(esp_timer_start_periodic(checkBatteryStatusTimer, BATTERY_CHECK_INTERVAL));
 
     ESP_ERROR_CHECK(i2c_master_init());
-    i2c_master_write_to_device(I2C_MASTER_NUM, BATTERY_CHARGER_ADDRESS, (const uint8_t[]){0x04, 67}, 2, 1000 / portTICK_PERIOD_MS); /* Charger Current*/
+    i2c_master_write_to_device(I2C_MASTER_NUM, BATTERY_CHARGER_ADDRESS, (const uint8_t[]){0x04, 0b01000011}, 2, 1000 / portTICK_PERIOD_MS); /* Charger Current*/
     i2c_master_write_to_device(I2C_MASTER_NUM, BATTERY_CHARGER_ADDRESS, (const uint8_t[]){0x07, 0b10000111}, 2, 1000 / portTICK_PERIOD_MS); /* I forget */
     i2c_master_write_to_device(I2C_MASTER_NUM, BATTERY_CHARGER_ADDRESS, (const uint8_t[]){0x08, 0b01001111}, 2, 1000 / portTICK_PERIOD_MS); /* I forget */
     i2c_master_write_to_device(I2C_MASTER_NUM, BATTERY_CHARGER_ADDRESS, (const uint8_t[]){0x0A, 0b01000001}, 2, 1000 / portTICK_PERIOD_MS); /* I forget */

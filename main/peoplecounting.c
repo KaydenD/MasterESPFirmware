@@ -201,7 +201,7 @@ static void peopleCountingAlgoritmMain(){
                     } else {
                         if(gpio_get_level(firstTriggerPin)){
                             fsm_state = STATE_WAIT_UNTIL_SECOND_TRIGGER;
-                            esp_timer_restart(blockedTimeTimer);
+                            esp_timer_restart(blockedTimeTimer, BLOCKED_TIME);
                         } else {
                             fsm_state = STATE_IDLE;
                             esp_timer_stop(blockedTimeTimer);
@@ -231,7 +231,7 @@ static void peopleCountingAlgoritmMain(){
                         ESP_LOGI(TAG, "FSM Cycle Complete. New count: %i", *count);
                     } else if (event.type == PHOTODIODE && event.pin == secondTriggerPin && event.state == 0 && gpio_get_level(firstTriggerPin) == 1){
                         fsm_state = STATE_WAIT_UNTIL_SECOND_TRIGGER;
-                        esp_timer_restart(blockedTimeTimer);
+                        esp_timer_restart(blockedTimeTimer, BLOCKED_TIME);
                     } else if(event.type == BLOCKED_TIME_INTERVAL){
                         fsm_state = STATE_BLOCKED;
                         gpio_set_level(BUZZER_PIN, 1);
